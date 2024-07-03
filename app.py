@@ -23,7 +23,7 @@ def extract_note_from_pdf(file_data):
     if name_match and note_match:
         name = name_match.group(1).strip()
         note = note_match.group(1).strip()
-        return {'name': name, 'note': f"{note}/1000"}
+        return {'name': name, 'note': note}
     else:
         return {'error': 'Name or note not found in the document'}
 
