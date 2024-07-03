@@ -16,13 +16,16 @@ def extract_note_from_pdf(file_data):
         page = document.load_page(page_num)
         text_content += page.get_text()
     
-    # Utiliser regex pour trouver la note
-    match = re.search(r'\b(\d{1,3}|1000)/1000\b', text_content)
-    if match:
-        note = int(match.group(1))
-        return str(note) + '/1000'
+    # Utiliser regex pour trouver le nom et la note
+    name_match = re.search(r"Monsieur\s+([A-Za-zÀ-ÖØ-öø-ÿ\s-]+)", text_content)
+    note_match = re.search(r'\b(\d{1,3}|1000)/1000\b', text_content)
+    
+    if name_match and note_match:
+        name = name_match.group(1).strip()
+        note = note_match.group(1).strip()
+        return {'name': name, 'note': f"{note}/1000"}
     else:
-        return json.dumps({'error': 'Note not found in the document'})
+        return {'error': 'Name or note not found in the document'}
 
 @app.route('/extract_note', methods=['POST'])
 def extract_note():
@@ -37,7 +40,8 @@ def extract_note():
     file_data = file.read()  # Lire les données binaires du fichier
     
     result = extract_note_from_pdf(file_data)
-    return jsonify({'result': result})
+    return jsonify(result)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
