@@ -17,7 +17,7 @@ def extract_note_from_pdf(file_data):
         text_content += page.get_text()
     
     # Utiliser regex pour trouver le nom et la note
-    name_match = re.search(r"Monsieur\s+([A-Za-zÀ-ÖØ-öø-ÿ\s-]+)", text_content)
+    name_match = re.search(r"Monsieur\s+([A-Za-zÀ-ÖØ-öø-ÿ-]+(?:\s[A-Za-zÀ-ÖØ-öø-ÿ-]+)*)", text_content)
     note_match = re.search(r'\b(\d{1,3}|1000)/1000\b', text_content)
     
     if name_match and note_match:
